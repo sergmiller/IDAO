@@ -1,4 +1,6 @@
-PATH_TO_TEST_DIRS = ["dataset/private_test", "dataset/publiс_test"]
+import pathlib as path
+
+PATH_TO_TEST_DIRS = [path.Path('tests/private_test'), path.Path('tests/publiс_test')]
 
 def main(*args, **kwargs):
 
