@@ -1,9 +1,7 @@
 import numpy as np
 import torch
-import torchvision
 
-mobilenet = torchvision.models.mobilenet_v3_small()
-mobilenet.load_state_dict(torch.load("mobilenet_state_dict"))
+mobilenet = torch.load("mobilenet")
 
 np.random.seed(0)
 t = np.random.random((1,3,500,500))
