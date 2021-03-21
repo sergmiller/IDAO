@@ -1,7 +1,6 @@
 import pickle
-from sklearn import datasets
-iris = datasets.load_iris()
-X, y = iris.data, iris.target
+import numpy as np
+X = np.array([[5.1, 3.5, 1.4, 0.2]])
 # load
 with open('model.pkl', 'rb') as f:
     clf2 = pickle.load(f)
