@@ -31,6 +31,13 @@ class LabeledDataset:
     def save(self, file : str):
         np.savez_compressed(file, dataset=self)
         
+    def subset(self, ids):
+        d = LabeledDataset()
+        d.samples = self.samples[ids]
+        d.labels = self.labels[ids]
+        d.tags = self.tags[ids]
+        return d
+        
     @staticmethod
     def load(file : str):
         return np.load(file, allow_pickle=True)['dataset'].item()
