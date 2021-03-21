@@ -1,6 +1,12 @@
 import numpy as np
 import torch
 
+from mobilenet_v3 import mobilenet_v3_small
+
+mobilenet = mobilenet_v3_small()
+mobilenet.load_state_dict(torch.load("mobilenet_state_dict"))
+
+
 
 import time
 start = time.time()
@@ -10,8 +16,6 @@ for i in np.arange(100):
         res = mobilenet(torch.Tensor(t)).detach().numpy()
 
 import pandas as pd
-import sys
-sys.appned('../..')
 from utils import file, dataset
 PATH_TO_TEST_DIRS = 'tests/'
 d1 = file.read_all_png_in_dir(PATH_TO_TEST_DIRS)
