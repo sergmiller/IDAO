@@ -15,11 +15,11 @@ def read_all_png_in_dir(base_path : str, limit : int = None) -> dict:
     import matplotlib.pyplot as plt
     import matplotlib.image as mpimg
     import tqdm
-        
-    imgs = [os.path.join(path, name) for path, subdirs, files in os.walk(base_path) for name in files]
+
+    imgs = [os.path.join(dir,f) for (dir, subdirs, fs) in os.walk(base_path) for f in fs]
     imgs = filter(lambda f: isfile(f) and '.png' == f[-4:], imgs)
     imgs = list(imgs)
     if limit is not None:
         imgs = imgs[:limit]
-    data = {img : mpimg.imread(img) for img in tqdm.tqdm(imgs, position=0)}
+    data = {img : mpimg.imread(img) for img in imgs}
     return data
