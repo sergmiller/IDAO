@@ -2,19 +2,19 @@ import numpy as np
 import torch
 import os
 
-from mobilenet_v3 import mobilenet_v3_small
+# from mobilenet_v3 import mobilenet_v3_small
+#
+# mobilenet = mobilenet_v3_small()
+# mobilenet.load_state_dict(torch.load("mobilenet_state_dict"))
 
-mobilenet = mobilenet_v3_small()
-mobilenet.load_state_dict(torch.load("mobilenet_state_dict"))
 
 
-
-import time
-start = time.time()
-for i in np.arange(1):
-    t = np.random.random((8,3,64,64))
-    with torch.no_grad():
-        res = mobilenet(torch.Tensor(t)).detach().numpy()
+# import time
+# start = time.time()
+# for i in np.arange(1):
+#     t = np.random.random((8,3,64,64))
+#     with torch.no_grad():
+#         res = mobilenet(torch.Tensor(t)).detach().numpy()
 
 import pandas as pd
 from utils import file, dataset
