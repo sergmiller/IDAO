@@ -6,7 +6,6 @@ import torch
 
 from itertools import chain
 
-import matplotlib.pyplot as plt
 from joblib import Parallel, delayed
 
 import torch
@@ -44,7 +43,7 @@ def build_embd_dataset(
     with Parallel(n_jobs=7) as parallel:
         pretrained_embeds = parallel(delayed(f)(i) for i in tqdm.tqdm(
             np.arange(0, d.samples.shape[0], batch_size), position=0))
-    
+
     pretrained_embeds_flat = []
 
     for batch in pretrained_embeds:
@@ -52,11 +51,11 @@ def build_embd_dataset(
             pretrained_embeds_flat.append(x)
 
     pretrained_embeds = np.array(pretrained_embeds_flat).reshape(-1, 1000)
-    
-    
+
+
     emb_dataset = LabeledDataset()
     emb_dataset.samples = pretrained_embeds
     emb_dataset.labels = d.labels
     emb_dataset.tags = d.tags
-    
+
     return emb_dataset

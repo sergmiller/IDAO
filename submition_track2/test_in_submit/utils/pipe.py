@@ -6,8 +6,6 @@ import torch
 
 from itertools import chain
 
-import matplotlib.pyplot as plt
-
 
 from .dataset import LabeledDataset
 from .applier import build_embd_dataset
@@ -23,12 +21,12 @@ def apply_all_models_to_test_dataset(
     if key not in _emb_cache:
         _emb_cache[key] = build_embd_dataset(d)
     emb_dataset = _emb_cache.get(key)
- 
+
     labels1 = model1.predict_proba(emb_dataset.samples)[:, 0]
     labels2 = model2.predict(emb_dataset.samples)
-    
+
     labels = np.stack([labels1, labels2]).T
-    
+
     emb_dataset.labels = labels
-    
+
     return emb_dataset

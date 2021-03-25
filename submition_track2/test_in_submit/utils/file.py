@@ -5,8 +5,6 @@ import torch
 
 from itertools import chain
 
-# import matplotlib.pyplot as plt
-
 from PIL import Image
 def img_loader(path: str):
     with Image.open(path) as img:
@@ -23,12 +21,15 @@ def read_all_png_in_dir(base_path : str, limit : int = None) -> dict:
     # for file in os.listdir('tests/public_test'):
     #     if '.png' == file[-4:]:
     #         img = os.path.join('tests/public_test', file)
+    #         print(img)
     #         data[img] = img_loader(img)
+    #         break
     # for file in os.listdir('tests/private_test'):
     #     if '.png' == file[-4:]:
     #         img = os.path.join('tests/public_test', file)
     #         data[img] = img_loader(img)
-    print('len of imgs', len(imgs))
+    print('len of files', len(imgs))
+    # print(len(data))
     imgs = filter(lambda f: isfile(f) and '.png' == f[-4:], imgs)
     imgs = list(imgs)
     if limit is not None:

@@ -6,8 +6,6 @@ import torch
 
 from itertools import chain
 
-import matplotlib.pyplot as plt
-
 from .file import read_all_png_in_dir
 from .domain import process_train_sample
 
@@ -22,26 +20,26 @@ class LabeledDataset:
         self.samples.append(sample)
         self.labels.append(label)
         self.tags.append(tag)
-        
+
     def finalize(self):
         self.samples = np.array(self.samples)
         self.labels = np.array(self.labels)
         self.tags = np.array(self.tags)
-        
+
     def save(self, file : str):
         np.savez_compressed(file, dataset=self)
-        
+
     def subset(self, ids):
         d = LabeledDataset()
         d.samples = self.samples[ids]
         d.labels = self.labels[ids]
         d.tags = self.tags[ids]
         return d
-        
+
     @staticmethod
     def load(file : str):
         return np.load(file, allow_pickle=True)['dataset'].item()
-    
+
     @staticmethod
     def merge(a, b):
         c = LabeledDataset()
@@ -49,7 +47,7 @@ class LabeledDataset:
         c.labels = np.concatenate([a.labels, b.labels], axis=0)
         c.tags = np.concatenate([a.tags, b.tags], axis=0)
         return c
-    
+
 
 def build_dataset(path : dir, sample_processor=process_train_sample, limit : int = None) -> LabeledDataset:
     samples = read_all_png_in_dir(path, limit)
