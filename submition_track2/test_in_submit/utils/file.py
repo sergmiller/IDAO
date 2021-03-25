@@ -11,28 +11,18 @@ def img_loader(path: str):
         img = np.array(img)
     return img
 
-def read_all_png_in_dir(base_path : str, limit : int = None) -> dict:
+def read_all_png_in_test_dir(base_path : str, limit : int = None) -> dict:
     from os import listdir
     from os.path import isfile, join
-    # import matplotlib.pyplot as plt
-
-    imgs = [os.path.join(dir,f) for (dir, subdirs, fs) in os.walk(base_path) for f in fs]
-    # data = {}
-    # for file in os.listdir('tests/public_test'):
-    #     if '.png' == file[-4:]:
-    #         img = os.path.join('tests/public_test', file)
-    #         print(img)
-    #         data[img] = img_loader(img)
-    #         break
-    # for file in os.listdir('tests/private_test'):
-    #     if '.png' == file[-4:]:
-    #         img = os.path.join('tests/public_test', file)
-    #         data[img] = img_loader(img)
-    print('len of files', len(imgs))
-    # print(len(data))
-    imgs = filter(lambda f: isfile(f) and '.png' == f[-4:], imgs)
-    imgs = list(imgs)
-    if limit is not None:
-        imgs = imgs[:limit]
-    data = {img : img_loader(img) for img in imgs}
+    data = {}
+    path2dir = os.path.join(base_path, 'public_test')
+    for file in os.listdir(path2dir):
+        if '.png' == file[-4:]:
+            img = os.path.join(path2dir, file)
+            data[img] = img_loader(img)
+    path2dir = os.path.join(base_path, 'private_test')
+    for file in os.listdir(path2dir):
+        if '.png' == file[-4:]:
+            img = os.path.join(path2dir, file)
+            data[img] = img_loader(img)
     return data

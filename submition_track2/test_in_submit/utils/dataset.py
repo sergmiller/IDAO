@@ -6,7 +6,7 @@ import torch
 
 from itertools import chain
 
-from .file import read_all_png_in_dir
+from .file import read_all_png_in_test_dir
 from .domain import process_train_sample
 
 
@@ -50,7 +50,7 @@ class LabeledDataset:
 
 
 def build_dataset(path : dir, sample_processor=process_train_sample, limit : int = None) -> LabeledDataset:
-    samples = read_all_png_in_dir(path, limit)
+    samples = read_all_png_in_test_dir(path, limit)
     d = LabeledDataset()
     for item in samples.items():
         tag, sample, label = sample_processor(item)

@@ -19,7 +19,7 @@ import os
 import pandas as pd
 from utils import file, dataset
 PATH_TO_TEST_DIRS = os.path.abspath('./tests')
-d1 = file.read_all_png_in_dir(PATH_TO_TEST_DIRS)
+d1 = file.read_all_png_in_test_dir(PATH_TO_TEST_DIRS)
 res = []
 for key in dataset._fix_tags(d1.keys()):
     res.append([key, 0, 0])
