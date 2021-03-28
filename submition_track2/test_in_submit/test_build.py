@@ -7,7 +7,9 @@ print(len(os.listdir('tests/public_test')))
 print('example files', os.listdir('tests/public_test')[0:2])
 from utils import file, dataset
 PATH_TO_TEST_DIRS = os.path.abspath('./tests')
-d1 = file.read_all_png_in_dir(PATH_TO_TEST_DIRS)
+# d1 = file.read_all_png_in_dir(PATH_TO_TEST_DIRS, limit=10)
+# print(len(d1))
+# print(d1[0])
 # mobilenet = mobilenet_v3_small()
 # mobilenet.load_state_dict(torch.load("mobilenet_state_dict"))
 #

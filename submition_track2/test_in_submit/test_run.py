@@ -1,5 +1,5 @@
 import numpy as np
-import torch
+# import torch
 import os
 
 # from mobilenet_v3 import mobilenet_v3_small
@@ -8,7 +8,7 @@ import os
 # mobilenet.load_state_dict(torch.load("mobilenet_state_dict"))
 
 
-
+#
 # import time
 # start = time.time()
 # for i in np.arange(1):
@@ -18,7 +18,7 @@ import os
 
 import pandas as pd
 from utils import file, dataset
-PATH_TO_TEST_DIRS = os.path.abspath('./tests')
+PATH_TO_TEST_DIRS = './tests'
 d1 = file.read_all_png_in_dir(PATH_TO_TEST_DIRS)
 res = []
 for key in dataset._fix_tags(d1.keys()):
