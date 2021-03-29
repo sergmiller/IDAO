@@ -3,6 +3,7 @@ import sys, os
 # Disable
 def blockPrint():
     sys.stderr = open(os.devnull, 'w')
+    sys.stdout = open(os.devnull, 'w')
 
 blockPrint()
 
@@ -40,7 +41,7 @@ mobilenet.load_state_dict(torch.load("models/mobilenet_state_dict"))
 
 croped_mobilenet = torch.nn.Sequential(
     transforms.CenterCrop(64),
-    applier.mobilenet_v3_small
+    mobilenet
 )
 
 def apply_random_projection_and_normalize(data : np.array, to_dim : int = 10, seed : int = 0):
@@ -86,8 +87,8 @@ def pipe_for_dir(dir : dir) -> dataset.LabeledDataset:
         dataset.build_batched_dataset(
             [dir],
             domain.process_test_sample,
-            limit=128,
-            batch_size=16),
+            # limit=256,
+            batch_size=64),
         croped_mobilenet,
         model1,
         model2
@@ -99,14 +100,30 @@ import pandas as pd
 from utils import file
 # PATH_TO_TEST_DIRS = "../../data/idao_dataset"
 PATH_TO_TEST_DIRS = os.path.abspath('./tests')
-# d1 = file.read_all_png_in_test_dir(PATH_TO_TEST_DIRS)
 
 public_predictions = pipe_for_dir(os.path.join(PATH_TO_TEST_DIRS, 'public_test'))
 private_predictions = pipe_for_dir(os.path.join(PATH_TO_TEST_DIRS, 'private_test'))
 
-result2save = []
+submit = dataset.LabeledDataset.merge(public_predictions, private_predictions)
+# print(public_predictions.labels)
+# exit(0)
 
-for key, array in file.read_all_png_in_dir_iter(PATH_TO_TEST_DIRS):
-    result2save.append([key, 0, 0])
-data_frame = pd.DataFrame(result2save, columns=["id", "classification_predictions", "regression_predictions"])
-data_frame.to_csv('submission.csv', index=False, header=True)
+dataset.dataset2submit_csv(submit, 'submission.csv')
+#
+# result2save = []
+#
+# loader = file.read_all_png_in_dirs(
+#     [
+#         os.path.join(PATH_TO_TEST_DIRS, 'public_test'),
+#         os.path.join(PATH_TO_TEST_DIRS, 'private_test'),
+#     ]
+# )
+#
+# for key, array in loader:
+#     result2save.append([key, 0, 0])
+# result2save = np.array(result2save)
+# result2save[:, 0] = dataset._fix_tags(result2save[:, 0])
+# data_frame = pd.DataFrame(result2save, columns=["id", "classification_predictions", "regression_predictions"])
+# data_frame.to_csv('submission.csv', index=False, header=True)
+
+# print("OK")

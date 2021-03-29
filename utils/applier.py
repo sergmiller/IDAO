@@ -16,16 +16,16 @@ from .dataset import LabeledDataset
 import torchvision.models as models
 # resnext50_32x4d = models.resnext50_32x4d(pretrained=True)
 # resnext50_32x4d = models.resnext50_32x4d(pretrained=True)
-try:
-    mobilenet_v3_small = models.mobilenet_v3_small(pretrained=True)
-except:
-    mobilenet_v3_small = None
-    print("Can't init pretrained model")
+# try:
+#     mobilenet_v3_small = models.mobilenet_v3_small(pretrained=True)
+# except:
+#     mobilenet_v3_small = None
+#     print("Can't init pretrained model")
 
 
 def build_embd_dataset(
     d : LabeledDataset,
-    model=mobilenet_v3_small,
+    model,
     batch_size : int=16,
     n_jobs: int=7
 ) -> LabeledDataset:
