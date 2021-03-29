@@ -44,8 +44,8 @@ def build_embd_dataset(
 
 
     with Parallel(n_jobs=n_jobs) as parallel:
-        pretrained_embeds = parallel(delayed(f)(i) for i in tqdm.tqdm(
-            np.arange(0, d.samples.shape[0], batch_size), position=0))
+        pretrained_embeds = parallel(delayed(f)(i) for i in
+            np.arange(0, d.samples.shape[0], batch_size))
 
     pretrained_embeds_flat = []
 

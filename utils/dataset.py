@@ -65,6 +65,9 @@ def build_batched_dataset(paths : list, sample_processor=process_train_sample, l
             d.finalize()
             yield d
             d = LabeledDataset()
+    if len(d.samples) > 0:
+        d.finalize()
+        yield d
 
 def build_dataset(paths : list, sample_processor=process_train_sample, limit : int = None) -> LabeledDataset:
     samples = read_all_png_in_dirs(paths, limit)
