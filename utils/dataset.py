@@ -8,7 +8,7 @@ from itertools import chain
 
 import matplotlib.pyplot as plt
 
-from .file import read_all_png_in_dir
+from .file import read_all_png_in_dirs
 from .domain import process_train_sample
 
 
@@ -22,26 +22,26 @@ class LabeledDataset:
         self.samples.append(sample)
         self.labels.append(label)
         self.tags.append(tag)
-        
+
     def finalize(self):
         self.samples = np.array(self.samples)
         self.labels = np.array(self.labels)
         self.tags = np.array(self.tags)
-        
+
     def save(self, file : str):
         np.savez_compressed(file, dataset=self)
-        
+
     def subset(self, ids):
         d = LabeledDataset()
         d.samples = self.samples[ids]
         d.labels = self.labels[ids]
         d.tags = self.tags[ids]
         return d
-        
+
     @staticmethod
     def load(file : str):
         return np.load(file, allow_pickle=True)['dataset'].item()
-    
+
     @staticmethod
     def merge(a, b):
         c = LabeledDataset()
@@ -49,12 +49,27 @@ class LabeledDataset:
         c.labels = np.concatenate([a.labels, b.labels], axis=0)
         c.tags = np.concatenate([a.tags, b.tags], axis=0)
         return c
-    
 
-def build_dataset(path : dir, sample_processor=process_train_sample, limit : int = None) -> LabeledDataset:
-    samples = read_all_png_in_dir(path, limit)
+
+def build_batched_dataset(paths : list, sample_processor=process_train_sample, limit : int = None, batch_size : int = None) -> LabeledDataset:
+    samples = read_all_png_in_dirs(paths)
+    cnt = 0
     d = LabeledDataset()
-    for item in samples.items():
+    for item in samples:
+        cnt += 1
+        tag, sample, label = sample_processor(item)
+        d.add_sample(tag, sample, label)
+        if limit is not None and cnt > limit:
+            return
+        if len(d.samples) == batch_size:
+            d.finalize()
+            yield d
+            d = LabeledDataset()
+
+def build_dataset(paths : list, sample_processor=process_train_sample, limit : int = None) -> LabeledDataset:
+    samples = read_all_png_in_dirs(paths, limit)
+    d = LabeledDataset()
+    for item in samples:
         tag, sample, label = sample_processor(item)
         d.add_sample(tag, sample, label)
     d.finalize()

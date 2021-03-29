@@ -22,10 +22,12 @@ except:
     mobilenet_v3_small = None
     print("Can't init pretrained model")
 
+
 def build_embd_dataset(
     d : LabeledDataset,
     model=mobilenet_v3_small,
-    batch_size : int=16
+    batch_size : int=16,
+    n_jobs: int=7
 ) -> LabeledDataset:
     assert model is not None
     pretrained_embeds = []
@@ -41,7 +43,7 @@ def build_embd_dataset(
         return emb
 
 
-    with Parallel(n_jobs=7) as parallel:
+    with Parallel(n_jobs=n_jobs) as parallel:
         pretrained_embeds = parallel(delayed(f)(i) for i in tqdm.tqdm(
             np.arange(0, d.samples.shape[0], batch_size), position=0))
 
