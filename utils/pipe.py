@@ -23,7 +23,7 @@ def apply_all_models_to_test_dataset_gen(
     tags = []
     for batch in dataset_gen:
         emb_batch_dataset = build_embd_dataset(batch, backbone, batch_size=len(batch.samples), n_jobs=1)
-        labels1 = model1.predict_proba(emb_batch_dataset.samples)[:, 0]
+        labels1 = model1.predict_proba(emb_batch_dataset.samples)
         labels2 = model2.predict(emb_batch_dataset.samples)
         labels_batch = [[l1,l2] for l1, l2 in zip(labels1, labels2)]
         labels.extend(labels_batch)

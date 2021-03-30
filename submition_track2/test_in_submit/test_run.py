@@ -60,15 +60,15 @@ def mae_scorer(estimator, X, y):
 
 
 class ModelWithProjection:
-    def __init__(self, model):
+    def __init__(self, model, side):
         self.model = model
+        self.side = side
     def predict(self, x):
         x_proj = apply_random_projection_and_normalize(x, to_dim=64)
         return self.model.predict(x_proj)
     def predict_proba(self, x):
         x_proj = apply_random_projection_and_normalize(x, to_dim=64)
-        return self.model.predict_proba(x_proj)
-        self.model.train(False)
+        return self.model.predict_proba(x_proj)[:, self.side]
 
 import pickle
 
@@ -78,20 +78,30 @@ with open('models/cv_label1.pkl', 'rb') as f:
 with open('models/cv_label2.pkl', 'rb') as f:
     cv_label2 = pickle.load(f)
 
-model1 = ModelWithProjection(cv_label1)
-model2 = ModelWithProjection(cv_label2)
+
+with open('models/cv_label1_tsne_test.pkl', 'rb') as f:
+    cv_label1_test = pickle.load(f)
+
+with open('models/cv_label2_tsne_test.pkl', 'rb') as f:
+    cv_label2_test = pickle.load(f)
 
 
-def pipe_for_dir(dir : dir) -> dataset.LabeledDataset:
+model1 = ModelWithProjection(cv_label1, 0)
+model2 = ModelWithProjection(cv_label2, 0)
+model1_test = ModelWithProjection(cv_label1_test, 1)
+model2_test = ModelWithProjection(cv_label2_test, 1)
+
+
+def pipe_for_dir(dir : dir, m1, m2) -> dataset.LabeledDataset:
     return pipe.apply_all_models_to_test_dataset_gen(
         dataset.build_batched_dataset(
             [dir],
             domain.process_test_sample,
             # limit=256,
-            batch_size=64),
+            batch_size=48),
         croped_mobilenet,
-        model1,
-        model2
+        m1,
+        m2
     )
 
 
@@ -101,8 +111,8 @@ from utils import file
 # PATH_TO_TEST_DIRS = "../../data/idao_dataset"
 PATH_TO_TEST_DIRS = os.path.abspath('./tests')
 
-public_predictions = pipe_for_dir(os.path.join(PATH_TO_TEST_DIRS, 'public_test'))
-private_predictions = pipe_for_dir(os.path.join(PATH_TO_TEST_DIRS, 'private_test'))
+public_predictions = pipe_for_dir(os.path.join(PATH_TO_TEST_DIRS, 'public_test'), model1, model2)
+private_predictions = pipe_for_dir(os.path.join(PATH_TO_TEST_DIRS, 'private_test'), model1_test, model2_test)
 
 submit = dataset.LabeledDataset.merge(public_predictions, private_predictions)
 # print(public_predictions.labels)
